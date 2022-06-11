@@ -1,3 +1,4 @@
+//parsing user name from script launch parameters array
 export const getUserName = (processArgs) => {
   const DEFAULT_NAME = 'SuperUser';//default name
   let userName = DEFAULT_NAME;
@@ -10,12 +11,12 @@ export const getUserName = (processArgs) => {
   });
 
   if (userName === DEFAULT_NAME) {
-    console.error(`user name is not recognized. using default name ${DEFAULT_NAME}`);
+    console.error(`user name is not recognized. using default name "${DEFAULT_NAME}"`);
   }
   return userName;
 };
 
-
+// parse script launch parameters
 const parseArgs = (processArgs) => {
   //return array of user parameter objects  [{parametr:value}]
   let args =  processArgs.slice(2);
@@ -48,6 +49,7 @@ const parseArgs = (processArgs) => {
   });
   return userArgs;
 };
+
 
 
 

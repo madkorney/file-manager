@@ -1,0 +1,21 @@
+{
+  "name": "file-manager",
+  "version": "1.0.0",
+  "description": "RSS nodejs task#02 file-manager",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run ./src/cli-file-manager.js",
+    "qs": "npm run start -- --username=serhioы"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madkorney/file-manager.git"
+  },
+  "author": "sergey kornienko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/madkorney/file-manager/issues"
+  },
+  "homepage": "https://github.com/madkorney/file-manager#readme"
+}

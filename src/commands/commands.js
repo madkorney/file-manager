@@ -37,6 +37,7 @@ export const parseCommandFromInputLine = (inputLine) => {
     command.name = nameCandidate;
     command.option1 = option1Candidate || '';
     command.option2 = option2Candidate || '';
+    //options are validated inside command calls
   }
 
 

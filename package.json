@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./src/cli-file-manager.js",
-    "qs": "npm run start -- --username=serhioы"
+    "qs": "npm run start -- --username=dr-jo"
   },
   "repository": {
     "type": "git",

@@ -1,11 +1,49 @@
 'use strict'
 
-import { getUserName } from "./common/parse-args.js";
+import { getUserName } from './common/parse-args.js';
+import * as readline from 'node:readline';
+import { stdin, stdout, exit } from 'process';
+import { parseCommandFromInputLine } from './commands/parse-commands.js';
+import * as errors from './common/error-handler.js';
 
-
+let currentPath = os.homedir();
 const userName = getUserName(process.argv);
 const WELCOME_MESSAGE = `Welcome to the File Manager, ${userName}!`;
+const FAREWELL_MESSAGE = `Thank you for using File Manager, ${userName}!`;
+const PROMPT_MESSAGE = 'You are currently in';
+const printPromptMessage = (currentPath) => {
+  console.log(`${PROMPT_MESSAGE} ${currentPath}`);
+}
+
+const rl = readline.createInterface({
+    input: stdin,
+    output: stdout
+});
 
 
+// == listeners
+rl.on('line', (inputLine) => {
+  if (inputLine.match(/^\s*\.exit\s*/i)) {
+    console.log(FAREWELL_MESSAGE);
+    exit(0);
+  }
+  let command = parseCommandFromInputLine(inputLine);
+  if (command.isResolved) {
+    console.log(`whoo - ${command.name} - prm1= ${command.option1}  prm2= ${command.option2}`); // !
+    runCommand(command);
+  } else {
+    console.error(errors.INVALID_COMMAND_MESSAGE);
+  }
+  printPromptMessage(currentPath);
 
+
+});
+
+rl.on('SIGINT', () => {
+  console.log(FAREWELL_MESSAGE);
+  exit(0);
+});
+
+// ==========
 console.log(WELCOME_MESSAGE);
+printPromptMessage(currentPath);

@@ -3,11 +3,11 @@
 import { getUserName } from './common/parse-args.js';
 import * as readline from 'node:readline';
 import { stdin, stdout, exit } from 'process';
-import { parseCommandFromInputLine, runCommand } from './commands/commands.js';
+import { parseCommandFromInputLine, runCommand, getCurrentPath } from './commands/commands.js';
 import * as errors from './common/error-handler.js';
-import {homedir} from 'node:os';
 
-let currentPath = homedir();
+
+
 const userName = getUserName(process.argv);
 const WELCOME_MESSAGE = `Welcome to the File Manager, ${userName}!`;
 const FAREWELL_MESSAGE = `Thank you for using File Manager, ${userName}!`;
@@ -33,9 +33,9 @@ rl.on('line', (inputLine) => {
   if (command.isResolved) {
     runCommand(command);
   } else {
-    console.error(errors.INVALID_COMMAND_MESSAGE);
+    console.log(errors.INVALID_COMMAND_MESSAGE);
   }
-  printPromptMessage(currentPath);
+  printPromptMessage(getCurrentPath());
 });
 
 rl.on('SIGINT', () => {
@@ -43,6 +43,6 @@ rl.on('SIGINT', () => {
   exit(0);
 });
 
-// ==========
+// ========== start script
 console.log(WELCOME_MESSAGE);
-printPromptMessage(currentPath);
+printPromptMessage(getCurrentPath());

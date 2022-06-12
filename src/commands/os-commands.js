@@ -6,7 +6,7 @@ import * as errors from '../common/error-handler.js';
 export const os = (option) => {
   if (!option ||
       !option.startsWith('--') ||
-      !OS_OPTIONS.includes(option)) {
+      !Object.keys(osFunctions).includes(option)) {
         console.error(errors.INVALID_PARAMETER_MESSAGE);
         return;
     }

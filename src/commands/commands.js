@@ -1,29 +1,39 @@
 import {os}  from './os-commands.js';
+import * as navcmd from './nav-commands.js';
+import * as fscmd from './fs-commands.js';
+import * as zipcmd from './zip-commands.js';
+import * as hashcmd from './hash-commands.js';
 
-export const COMMANDS=[
-  'up',
-  'cd',
-  'ls',
-  'cat',
-  'add',
-  'rn',
-  'cp',
-  'mv',
-  'rm',
-  'os',
-  'hash',
-  'compress',
-  'decompress'
-];
+import {homedir} from 'node:os';
+let currentPath = homedir(); // init for global cur path. if a command can change path it should return new path
+export const getCurrentPath = () => {
+  return currentPath;
+}
 
-export const OS_OPTIONS = [
-  '--cpus',
-  '--EOL',
-  '--homedir',
-  '--username',
-  '--architecture',
-  '--cpuz',
-];
+// export const COMMANDS=[
+//   'up',
+//   'cd',
+//   'ls',
+//   'cat',
+//   'add',
+//   'rn',
+//   'cp',
+//   'mv',
+//   'rm',
+//   'os',
+//   'hash',
+//   'compress',
+//   'decompress'
+// ]; // todo can be removed, use only base functions obj
+
+// export const OS_OPTIONS = [
+//   '--cpus',
+//   '--EOL',
+//   '--homedir',
+//   '--username',
+//   '--architecture',
+//   '--cpuz',
+// ]; // todo can be removed, use only os functions obj
 
 export const parseCommandFromInputLine = (inputLine) => {
   let command = {
@@ -34,7 +44,7 @@ export const parseCommandFromInputLine = (inputLine) => {
   }
   let [nameCandidate, option1Candidate, option2Candidate] = inputLine.split(' ');
 
-  command.isResolved = COMMANDS.includes(nameCandidate);
+  command.isResolved = Object.keys(baseFunctions).includes(nameCandidate);
 
   if (command.isResolved) {
     command.name = nameCandidate;
@@ -42,7 +52,6 @@ export const parseCommandFromInputLine = (inputLine) => {
     command.option2 = option2Candidate || '';
     //options are validated inside command calls
   }
-
 
   return command;
 }
@@ -52,17 +61,43 @@ export const runCommand = (command) => {
 }
 
 const baseFunctions = {
-  'os': function(arg){os(arg)},
-  'hash': function(){console.log('hsh tbd')},
-  'up': function(){console.log('up tbd')},
-  'cd': function(){console.log('cd tbd')},
-  'ls': function(){console.log('ls tbd')},
-  'cat': function(){console.log('cat tbd')},
-  'add': function(){console.log('add tbd')},
-  'rn': function(){console.log('rn tbd')},
-  'cp': function(){console.log('cp tbd')},
-  'mv': function(){console.log('mv tbd')},
-  'rm': function(){console.log('rm tbd')},
-  'compress': function(){console.log('zip tbd')},
-  'decompress': function(){console.log('unzip tbd')},
+  'os': function(option){
+    os(option);
+  },
+  'hash': function(pathToFile){
+    hashcmd.printHash(pathToFile, currentPath);
+  },
+  'up': function(){
+    currentPath = navcmd.up(currentPath);
+  },
+  'cd': function(pathToTargetDir){
+    currentPath = navcmd.cd(currentPath, pathToTargetDir);
+  },
+  'ls': function(){
+    navcmd.ls(currentPath);
+  },
+  'cat': function(pathToFile){
+    fscmd.cat(pathToFile, currentPath);
+  },
+  'add': function(newFileName){
+    fscmd.add(newFileName, currentPath);
+  },
+  'rn': function(pathToFile, newFileName){
+    fscmd.rn(pathToFile, newFileName, currentPath);
+  },
+  'cp': function(pathToFile, pathToNewDir){
+    fscmd.cp(pathToFile, pathToNewDir, currentPath);
+  },
+  'mv': function(pathToFile, pathToNewDir){
+    fscmd.mv(pathToFile, pathToNewDir, currentPath);
+  },
+  'rm': function(pathToFile){
+    fscmd.rm(pathToFile, pathToNewDir, currentPath);
+  },
+  'compress': function(pathToFile, pathToDestination){
+    zipcmd.compress(pathToFile, pathToDestination, currentPath)
+  },
+  'decompress': function(pathToFile, pathToDestination){
+    zipcmd.decompress(pathToFile, pathToDestination, currentPath);
+  },
 };

@@ -10,31 +10,6 @@ export const getCurrentPath = () => {
   return currentPath;
 }
 
-// export const COMMANDS=[
-//   'up',
-//   'cd',
-//   'ls',
-//   'cat',
-//   'add',
-//   'rn',
-//   'cp',
-//   'mv',
-//   'rm',
-//   'os',
-//   'hash',
-//   'compress',
-//   'decompress'
-// ]; // todo can be removed, use only base functions obj
-
-// export const OS_OPTIONS = [
-//   '--cpus',
-//   '--EOL',
-//   '--homedir',
-//   '--username',
-//   '--architecture',
-//   '--cpuz',
-// ]; // todo can be removed, use only os functions obj
-
 export const parseCommandFromInputLine = (inputLine) => {
   let command = {
     isResolved: false,
@@ -92,7 +67,7 @@ const baseFunctions = {
     fscmd.mv(pathToFile, pathToNewDir, currentPath);
   },
   'rm': function(pathToFile){
-    fscmd.rm(pathToFile, pathToNewDir, currentPath);
+    fscmd.rm(pathToFile, currentPath);
   },
   'compress': function(pathToFile, pathToDestination){
     zipcmd.compress(pathToFile, pathToDestination, currentPath)

@@ -1,3 +1,5 @@
+import {os}  from './os-commands.js';
+
 export const COMMANDS=[
   'up',
   'cd',
@@ -20,6 +22,7 @@ export const OS_OPTIONS = [
   '--homedir',
   '--username',
   '--architecture',
+  '--cpuz',
 ];
 
 export const parseCommandFromInputLine = (inputLine) => {
@@ -45,5 +48,21 @@ export const parseCommandFromInputLine = (inputLine) => {
 }
 
 export const runCommand = (command) => {
-  command.name(command.option1, command.option2);
+  baseFunctions[command.name](command.option1, command.option2);
 }
+
+const baseFunctions = {
+  'os': function(arg){os(arg)},
+  'hash': function(){console.log('hsh tbd')},
+  'up': function(){console.log('up tbd')},
+  'cd': function(){console.log('cd tbd')},
+  'ls': function(){console.log('ls tbd')},
+  'cat': function(){console.log('cat tbd')},
+  'add': function(){console.log('add tbd')},
+  'rn': function(){console.log('rn tbd')},
+  'cp': function(){console.log('cp tbd')},
+  'mv': function(){console.log('mv tbd')},
+  'rm': function(){console.log('rm tbd')},
+  'compress': function(){console.log('zip tbd')},
+  'decompress': function(){console.log('unzip tbd')},
+};

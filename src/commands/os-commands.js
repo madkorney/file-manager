@@ -27,6 +27,7 @@ export const osFunctions = {
         }
         catch (err) {
           console.log(errors.OPERATION_ERROR_MESSAGE);
+          return false;
         }
       },
 

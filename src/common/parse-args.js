@@ -16,6 +16,10 @@ export const getUserName = (processArgs) => {
   if (!userNameResolved) {
     console.error(`user name is not recognized. using default OS username..`);
     userName = osFunctions.username();
+    if (!userName) {
+      console.log(`Houston, we've got a problem here ...`);
+      process.exit(1);
+    }
   }
   return userName;
 };

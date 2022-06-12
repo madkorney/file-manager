@@ -1,34 +1,22 @@
 import fs from 'fs/promises';
-import { existsSync as pathExists } from 'fs';
+import { existsSync as pathExists, constants } from 'fs';
 import path from 'path';
 import { pipeline } from 'stream';
 import * as errors from '../common/error-handler.js';
-import {stdin, stdout} from 'process';
-import { constants } from 'node:fs';
+import {stdout} from 'process';
+
 
 export const cat = async (pathToFile, currentPath) => {
   // Read file and print it's content in console, return nothing
   if (pathToFile === '') {
-    console.log(errors.OPERATION_ERROR_MESSAGE); // no file, stop
+    console.log(errors.INVALID_PARAMETER_MESSAGE); // no file, stop
     return false;
   }
   const pathToSourceFile = path.resolve(currentPath, pathToFile);
 
   try {
-    const fd = await fs.open(pathToSourceFile);
-    const readStream = fd.createReadStream();
-
-    pipeline(
-      readStream,
-      stdout,
-      (err) => {
-        if (err) {
-          console.log(errors.OPERATION_ERROR_MESSAGE);
-          return false;
-        }
-        return true;
-      }
-    );
+    const data = await fs.readFile(pathToSourceFile, {encoding: 'utf-8'});
+    console.log(data);
   }
   catch (err) {
     console.log(errors.OPERATION_ERROR_MESSAGE);

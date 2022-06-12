@@ -1,17 +1,16 @@
-import {COMMANDS, OS_OPTIONS} from './commands.js';
 import * as nodeos from 'node:os';
 import * as errors from '../common/error-handler.js';
 
 
 export const os = (option) => {
+  let funcName = option.slice(2);// drop '--' prefix
   if (!option ||
       !option.startsWith('--') ||
-      !Object.keys(osFunctions).includes(option)) {
+      !Object.keys(osFunctions).includes(funcName)) {
         console.error(errors.INVALID_PARAMETER_MESSAGE);
         return;
     }
-    let funcName = option.slice(2);
-    osFunctions[funcName](); // drop '--' prefix and call respective func
+    osFunctions[funcName](); // call respective func
 }
 
 const osFunctions = {

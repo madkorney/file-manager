@@ -1,17 +1,21 @@
+import {osFunctions} from '../commands/os-commands.js';
+
 //parsing user name from script launch parameters array
 export const getUserName = (processArgs) => {
-  const DEFAULT_NAME = 'SuperUser';//default name
-  let userName = DEFAULT_NAME;
+  let userName = '';
   let userArgs = parseArgs(processArgs);
+  let userNameResolved = false;
 
   userArgs.forEach((parameter)=> {
     if (Object.keys(parameter).includes('username')) {
       userName = parameter.username;
+      userNameResolved = true;
     }
   });
 
-  if (userName === DEFAULT_NAME) {
-    console.error(`user name is not recognized. using default name "${DEFAULT_NAME}"`);
+  if (!userNameResolved) {
+    console.error(`user name is not recognized. using default OS username..`);
+    userName = osFunctions.username();
   }
   return userName;
 };

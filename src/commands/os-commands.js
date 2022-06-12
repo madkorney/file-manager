@@ -13,7 +13,7 @@ export const os = (option) => {
     osFunctions[funcName](); // call respective func
 }
 
-const osFunctions = {
+export const osFunctions = {
 
   'architecture': function() {
         console.log(`Node.js binary was compiled for: ${nodeos.arch()}`);
@@ -23,6 +23,7 @@ const osFunctions = {
         try {
           let userInformation = nodeos.userInfo();
           console.log(`OS active user name: ${userInformation.username}`);
+          return userInformation.username;
         }
         catch (err) {
           console.log(errors.OPERATION_ERROR_MESSAGE);
@@ -41,19 +42,11 @@ const osFunctions = {
 
   'cpus': function() {
         console.log(`logical CPU cores info:`);
-        console.log(nodeos.cpus());
+        console.table(nodeos.cpus(),['model', 'speed']);
       },
 
-  'cpuz': function() {
-      console.log(`logical CPU cores info:`);
-      console.table(nodeos.cpus(),['model', 'speed']);
-      for (let cpu of nodeos.cpus()) {
-        console.table(cpu);
-      }
-    },
-
   'EOL': function() {
-      let marker = nodeos.EOL
+      let marker = nodeos.EOL;
       console.log(`The OS-specific end-of-line marker is "${marker === `\n`? '\\n' : '\\r\\n'}"`);
     },
 };

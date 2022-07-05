@@ -16,16 +16,31 @@ const printPromptMessage = (currentPath) => {
   console.log(`${PROMPT_MESSAGE} ${currentPath}`);
 }
 
+const stopFileManager = () => {
+  console.log(FAREWELL_MESSAGE);
+  exit();
+}
+
+const gotExitCommandFrom = (inputLine) => {
+  let gotExitCmd = inputLine.trim()
+                  .toLowerCase()
+                  .includes('.exit');
+  return gotExitCmd;
+}
+
 const rl = readline.createInterface({
     input: stdin,
     output: stdout
 });
 
 // == listeners
+rl.on('SIGINT', () => {
+  stopFileManager();
+});
+
 rl.on('line', (inputLine) => {
-  if (inputLine.match(/^\s*\.exit\s*/i)) {
-    console.log(FAREWELL_MESSAGE);
-    exit(0);
+  if (gotExitCommandFrom(inputLine)) {
+    stopFileManager();
   }
 
   let command = parseCommandFromInputLine(inputLine);
@@ -35,13 +50,11 @@ rl.on('line', (inputLine) => {
   } else {
     console.log(errors.INVALID_COMMAND_MESSAGE);
   }
+
   printPromptMessage(getCurrentPath());
 });
 
-rl.on('SIGINT', () => {
-  console.log(FAREWELL_MESSAGE);
-  exit(0);
-});
+
 
 // ========== start script
 console.log(WELCOME_MESSAGE);

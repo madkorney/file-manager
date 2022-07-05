@@ -1,11 +1,11 @@
-import {os}  from './os-commands.js';
+import * as oscmd  from './os-commands.js';
 import * as navcmd from './nav-commands.js';
 import * as fscmd from './fs-commands.js';
 import * as zipcmd from './zip-commands.js';
 import * as hashcmd from './hash-commands.js';
 
 import {homedir} from 'node:os';
-let currentPath = homedir(); // init for global cur path. if a command can change path it should return new path
+let currentPath = homedir(); // init for global current path. if a command can change path it should return updated current path
 export const getCurrentPath = () => {
   return currentPath;
 }
@@ -14,17 +14,17 @@ export const parseCommandFromInputLine = (inputLine) => {
   let command = {
     isResolved: false,
     name:'',
-    option1: '',
-    option2: '',
+    argument1: '', // name isnt good but for different commands arguments have different meanings
+    argument2: '',
   }
-  let [nameCandidate, option1Candidate, option2Candidate] = inputLine.split(' ');
+  let [commandNameCandidate, argument1Candidate, argument2Candidate] = inputLine.split(' ');
 
-  command.isResolved = Object.keys(baseFunctions).includes(nameCandidate);
+  command.isResolved = Object.keys(baseCommands).includes(commandNameCandidate);
 
   if (command.isResolved) {
-    command.name = nameCandidate;
-    command.option1 = option1Candidate || '';
-    command.option2 = option2Candidate || '';
+    command.name = commandNameCandidate;
+    command.argument1 = argument1Candidate || '';
+    command.argument2 = argument2Candidate || '';
     //options are validated inside command calls
   }
 
@@ -32,12 +32,12 @@ export const parseCommandFromInputLine = (inputLine) => {
 }
 
 export const runCommand = (command) => {
-  baseFunctions[command.name](command.option1, command.option2);
+ baseCommands[command.name](command.argument1, command.argument2);
 }
 
-const baseFunctions = {
+const baseCommands = {
   'os': function(option){
-    os(option);
+    oscmd.os(option);
   },
   'hash': function(pathToFile){
     hashcmd.printHash(pathToFile, currentPath);

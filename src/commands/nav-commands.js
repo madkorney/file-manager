@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs/promises';
-import { existsSync as pathExist } from 'fs';
+import { existsSync as pathExists } from 'fs';
 import * as errors from '../common/error-handler.js';
 
 export const up = (currentPath) => {
@@ -21,10 +21,18 @@ export const ls = async (currentPath) => {
         dirNames.push(`[${item.name}]`);
       }
     }
-    dirNames.sort();
-    fileNames.sort();
-    dirNames.forEach(item => console.log(item));
-    fileNames.forEach(item => console.log(item));
+    dirNames.sort((a,b) => {
+                return b.toLowerCase() > a.toLowerCase()
+              })
+            .forEach((item) => {
+              console.log(item)
+              });
+    fileNames.sort((a,b) => {
+                return b.toLowerCase() > a.toLowerCase()
+              })
+              .forEach((item) => {
+                console.log(item)
+              });
   }
   catch (err) {
     console.log(errors.OPERATION_ERROR_MESSAGE);
@@ -33,17 +41,13 @@ export const ls = async (currentPath) => {
 }
 
 export const cd = (currentPath, targetPath) => {
-  let updatedPath = currentPath;
-  if (path.isAbsolute(targetPath)) {
-    updatedPath = targetPath;
-  } else {
-    updatedPath = path.resolve(currentPath, targetPath);
-  }
 
-  if (!pathExist(updatedPath)) {
+  let resolvedTargetPath = path.resolve(currentPath, targetPath);
+
+  if (!pathExists(resolvedTargetPath)) {
     console.log(errors.OPERATION_ERROR_MESSAGE);
     return currentPath;
   }
 
-  return updatedPath;
+  return resolvedTargetPath;
 }

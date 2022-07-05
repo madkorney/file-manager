@@ -1,13 +1,11 @@
 import fs from 'fs/promises';
 import { existsSync as pathExists, constants } from 'fs';
 import path from 'path';
-import { pipeline } from 'stream';
 import * as errors from '../common/error-handler.js';
-import {stdout} from 'process';
 
 
 export const cat = async (pathToFile, currentPath) => {
-  // Read file and print it's content in console, return nothing
+  // Read file and print it's content in console, return true if success or false
   if (pathToFile === '') {
     console.log(errors.INVALID_PARAMETER_MESSAGE); // no file, stop
     return false;
@@ -15,8 +13,10 @@ export const cat = async (pathToFile, currentPath) => {
   const pathToSourceFile = path.resolve(currentPath, pathToFile);
 
   try {
+    //todo rework to streams.  stdout and readline resolve required
     const data = await fs.readFile(pathToSourceFile, {encoding: 'utf-8'});
     console.log(data);
+    return true;
   }
   catch (err) {
     console.log(errors.OPERATION_ERROR_MESSAGE);
@@ -116,8 +116,13 @@ export const rm = async (pathToTargetFile, currentPath) => {
 export const mv = async (pathToFile, pathToNewDir, currentPath) => {
   // Move file (same as copy but initial file is deleted):
   let successMove = false;
-  if (cp(pathToFile, pathToNewDir, currentPath)) {
+  if (await cp(pathToFile, pathToNewDir, currentPath)) {
     successMove = rm(pathToFile, currentPath)
   };
   return successMove;
+}
+
+export const mvFast = async (pathToFile, pathToNewDir, currentPath) => {
+  // Move file (=rename):
+ 
 }

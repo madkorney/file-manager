@@ -6,14 +6,14 @@ export const os = (option) => {
   let funcName = option.slice(2);// drop '--' prefix
   if (!option ||
       !option.startsWith('--') ||
-      !Object.keys(osFunctions).includes(funcName)) {
+      !Object.keys(osCommands).includes(funcName)) {
         console.error(errors.INVALID_PARAMETER_MESSAGE);
         return;
     }
-    osFunctions[funcName](); // call respective func
+    osCommands[funcName](); // call respective func
 }
 
-export const osFunctions = {
+export const osCommands = {
 
   'architecture': function() {
         console.log(`Node.js binary was compiled for: ${nodeos.arch()}`);
@@ -43,7 +43,12 @@ export const osFunctions = {
 
   'cpus': function() {
         console.log(`logical CPU cores info:`);
-        console.table(nodeos.cpus(),['model', 'speed']);
+        let cpusList = nodeos.cpus().map((cpu) => {
+            cpu.speedInGhz = `${cpu.speed/1000}00 GHz`;
+            cpu.model = cpu.model.trim();
+            return cpu;
+          });
+        console.table(cpusList, ['model', 'speedInGhz']);
       },
 
   'EOL': function() {

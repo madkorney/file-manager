@@ -1,6 +1,6 @@
 import path from 'node:path';
-import * as errors from '../common/error-handler.js';
 import {createHash} from 'crypto';
+import * as errors from '../common/error-handler.js';
 import * as fs from 'fs/promises';
 
 
@@ -13,27 +13,20 @@ export const getHexHash = async (pathToFile) => {
       {encoding: 'utf-8'}
     );
     hash.update(fileContent);
+    const hashHex = hash.digest('hex');
+    return hashHex;
   }
-  catch (err) {
+  catch {
     console.log(errors.OPERATION_ERROR_MESSAGE);
-      return false;
+    return false;
   }
-
-  const hashHex = hash.digest('hex');
-  return hashHex;
 }
-
-
 
 export const printHash = async (pathToFile, currentPath) => {
   const fullPathToFile = path.resolve(currentPath, pathToFile);
 
-  try {
-    let fileHash = await getHexHash(fullPathToFile);
-    if (fileHash) {console.log(`hash for ${fullPathToFile} is : ${fileHash}`);}
-  }
-  catch (err) {
-    console.log(errors.OPERATION_ERROR_MESSAGE);
-    return false;
+  let fileHash = await getHexHash(fullPathToFile);
+  if (fileHash) {
+    console.log(`hash for ${fullPathToFile} is : ${fileHash}`);
   }
 }

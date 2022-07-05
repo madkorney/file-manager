@@ -1,6 +1,6 @@
-import {osFunctions} from '../commands/os-commands.js';
+import {osCommands} from '../commands/os-commands.js';
 
-//parsing user name from script launch parameters array
+//getting user name from script launch parameters array
 export const getUserName = (processArgs) => {
   let userName = '';
   let userArgs = parseArgs(processArgs);
@@ -14,17 +14,15 @@ export const getUserName = (processArgs) => {
   });
 
   if (!userNameResolved) {
-    console.error(`user name is not recognized. using default OS username..`);
-    userName = osFunctions.username();
+    console.log(`user name is not recognized. using default OS username..`);
+    userName = osCommands.username();
     if (!userName) {
-      console.log(`Houston, we've got a problem here ...`);
-      process.exit(1);
+      userName = 'unknown_meatbag';
     }
   }
   return userName;
 };
 
-// parse script launch parameters
 const parseArgs = (processArgs) => {
   //return array of user parameter objects  [{parametr:value}]
   let args =  processArgs.slice(2);
@@ -35,7 +33,7 @@ const parseArgs = (processArgs) => {
     let delimiterIndex = paramString.indexOf('=');
 
     if (delimiterIndex === -1) {
-      return {} // invalid param format, no delimiter found
+      return false; // invalid param format, no delimiter found
     }
 
     let paramName = paramString.substring(2, delimiterIndex);  // omit prefix --
@@ -47,10 +45,10 @@ const parseArgs = (processArgs) => {
     return parametr;
   }
 
-  args.forEach( (item) => {
-    if (item.startsWith('--')) {
-      let userArg = extractParameter(item);
-      if (Object.keys(userArg).length !== 0) {
+  args.forEach( (argChunk) => {
+    if (argChunk.startsWith('--')) {
+      let userArg = extractParameter(argChunk);
+      if (userArg) {
         userArgs.push(userArg);
       }
     }
